@@ -8,9 +8,27 @@
   </head>
   <body>
     <main class="app">
+      <button id="telegramBtn" class="tg-link" type="button" aria-label="Open Telegram channel">
+        <svg
+          class="tg-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M21.1 4.54c.31-.12.65.15.58.48l-2.78 13.9c-.06.31-.4.45-.67.28l-4.49-2.86-2.3 2.22c-.23.22-.61.07-.63-.25l-.31-4.58L18.76 7.6 9.03 12.2 4.83 10.8c-.34-.11-.37-.58-.05-.74L21.1 4.54Z"
+            fill="currentColor"
+          />
+        </svg>
+        <span>Telegram</span>
+      </button>
+
       <header class="hero">
         <p class="eyebrow">velite</p>
-        <h1>UERenamer v0.1</h1>
+        <h1>UERenamer v0.2</h1>
         <p class="subtext">Start by selecting a <code>.uproject</code>. The app will map project files and prepare the rename pipeline.</p>
       </header>
 
@@ -58,9 +76,21 @@
           <p><strong>Blacklist entries:</strong> <span id="excludedCount">0</span></p>
         </div>
         <div class="section-head">
-          <h2>Matched files</h2>
-          <button id="toggleMatchedBtn" class="button secondary small hidden">
-            Hide matched list
+          <h2>Matched Files</h2>
+          <button
+            id="toggleMatchedBtn"
+            class="icon-toggle hidden"
+            type="button"
+            aria-label="Toggle matched files list"
+            aria-expanded="true"
+            title="Hide matched list"
+          >
+            <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6.7 9.7a1 1 0 0 1 1.4 0L12 13.6l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 11.1a1 1 0 0 1 0-1.4Z"
+                fill="currentColor"
+              />
+            </svg>
           </button>
         </div>
         <ul id="fileList" class="file-list hidden"></ul>

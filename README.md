@@ -1,4 +1,8 @@
-# 🛠️ UERenamer v0.1
+<p align="center">
+  <img src="docs/images/app-main.png" alt="UERenamer screenshot" width="500">
+</p>
+
+# 🛠️ UERenamer v0.2
 
 **UERenamer** — это инструмент для полного переименования проектов на Unreal Engine.
 
@@ -9,6 +13,15 @@
 * **Превью изменений:** Отображение тех файлов и папок, которые подвергнутся изменениям
 * **API Macro Handling:** Автоматическая замена макросов (например, `OLDPROJECT_API` -> `NEWPROJECT_API`).
 * **Гибкие исключения:** Настраиваемый черный список папок и файлов.
+
+## 📂 Что именно меняется
+
+| Параметр | Значение |
+|---|---|
+| Сканируемые папки | Корень проекта + `Config`, `Source`, `Plugins` |
+| Папки-исключения (по умолчанию) | `.git`, `.idea`, `.vs`, `Binaries`, `DerivedDataCache`, `Intermediate`, `Saved`, `node_modules`, `__ExternalActors__`, `__ExternalObjects__` |
+| Поддерживаемые типы файлов (путь/содержимое) | `.uproject`, `.uplugin`, `.ini`, `.cs`, `.h`, `.cpp`, `.hpp`, `.c`, `.cc`, `.sln`, `.vcxproj`, `.vcxproj.filters` |
+| Правила замены | Старое имя проекта (без учета регистра) + API-макрос (`OLDPROJECT_API` -> `NEWPROJECT_API`) |
 
 ## ❌ Ограничения
 * На данный момент нет функционала по автоматическому бекапу изменяемых файлов

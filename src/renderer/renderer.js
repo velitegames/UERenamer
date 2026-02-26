@@ -43,6 +43,7 @@ const resultContentUpdatedEl = document.getElementById("resultContentUpdated");
 const resultRedirectsAddedEl = document.getElementById("resultRedirectsAdded");
 const resultErrorsEl = document.getElementById("resultErrors");
 const resultLogListEl = document.getElementById("resultLogList");
+const telegramBtnEl = document.getElementById("telegramBtn");
 
 let selectedUprojectPath = "";
 let baselineOldName = "";
@@ -185,10 +186,16 @@ function updateNewNameValidationUI() {
 
 function setMatchedListVisibility(isVisible) {
   fileListEl.classList.toggle("hidden", !isVisible);
-  toggleMatchedBtnEl.textContent = isVisible ? "Hide matched list" : "Show matched list";
+  toggleMatchedBtnEl.setAttribute("aria-expanded", isVisible ? "true" : "false");
+  toggleMatchedBtnEl.title = isVisible ? "Hide matched list" : "Show matched list";
+}
+
+function syncMatchedToggleVisibility() {
+  toggleMatchedBtnEl.classList.toggle("hidden", !selectedUprojectPath);
 }
 
 function clearPreviewUI() {
+  const wasMatchedListVisible = !fileListEl.classList.contains("hidden");
   previewPanelEl.classList.add("hidden");
   closeApplyModal();
   closeResultModal();
@@ -196,12 +203,11 @@ function clearPreviewUI() {
   hasPreviewReady = false;
   applyBtnEl.disabled = true;
   if (selectedUprojectPath) {
-    setMatchedListVisibility(true);
-    toggleMatchedBtnEl.classList.remove("hidden");
+    setMatchedListVisibility(wasMatchedListVisible);
   } else {
     fileListEl.classList.add("hidden");
-    toggleMatchedBtnEl.classList.add("hidden");
   }
+  syncMatchedToggleVisibility();
   previewOldNameEl.textContent = "-";
   previewNewNameEl.textContent = "-";
   previewFilesWithChangesEl.textContent = "0";
@@ -434,7 +440,7 @@ function renderProjectData(result) {
   visitedDirsEl.textContent = String(result.visitedDirs);
   renderFiles(currentMatchedFiles);
   fileListEl.classList.remove("hidden");
-  toggleMatchedBtnEl.classList.remove("hidden");
+  syncMatchedToggleVisibility();
 }
 
 function renderFiles(files) {
@@ -530,6 +536,8 @@ pickBtn.addEventListener("click", async () => {
     const result = await window.projectApi.pickUproject();
 
     if (result.canceled) {
+      selectedUprojectPath = "";
+      syncMatchedToggleVisibility();
       setStatus("Selection canceled.");
       return;
     }
@@ -740,4 +748,14 @@ rescanBtn.addEventListener("click", async () => {
   }
 });
 
+telegramBtnEl.addEventListener("click", async () => {
+  try {
+    await window.projectApi.openExternal("https://t.me/velitelink");
+  } catch (error) {
+    console.error(error);
+    setStatus("Failed to open Telegram link.");
+  }
+});
+
 updateExcludedCountUI();
+syncMatchedToggleVisibility();

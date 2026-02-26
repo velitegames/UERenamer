@@ -1,6 +1,6 @@
 const path = require("node:path");
 const fs = require("node:fs/promises");
-const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const { app, BrowserWindow, dialog, ipcMain, shell } = require("electron");
 
 const IGNORED_DIRS = new Set([
   ".git",
@@ -805,6 +805,15 @@ ipcMain.handle("project:apply-rename", async (_event, payload) => {
     includeCoreRedirects,
     ...applyResult,
   };
+});
+
+ipcMain.handle("app:open-external", async (_event, payload) => {
+  const url = String(payload?.url || "");
+  if (!/^https?:\/\//i.test(url)) {
+    throw new Error("Only http(s) URLs are allowed.");
+  }
+  await shell.openExternal(url);
+  return { ok: true };
 });
 
 app.whenReady().then(() => {
