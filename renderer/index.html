@@ -1,0 +1,137 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UE Renamer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <p class="eyebrow">velite</p>
+        <h1>UERenamer v0.1</h1>
+        <p class="subtext">Start by selecting a <code>.uproject</code>. The app will map project files and prepare the rename pipeline.</p>
+      </header>
+
+      <section class="panel controls">
+        <button id="pickBtn" class="button">Select .uproject</button>
+        <p id="status" class="status">No project selected.</p>
+      </section>
+
+      <section id="oldNamePanel" class="panel old-name-panel hidden">
+        <label class="field-label" for="oldNameInput">Old project name</label>
+        <div class="old-name-row">
+          <input id="oldNameInput" class="text-input" type="text" autocomplete="off" />
+          <button id="rescanBtn" class="button secondary" disabled>Rescan</button>
+        </div>
+        <p class="hint">If detected name is wrong, edit it and click Rescan.</p>
+      </section>
+
+      <section id="newNamePanel" class="panel new-name-panel hidden">
+        <label class="field-label" for="newNameInput">New project name</label>
+        <div class="old-name-row">
+          <input
+            id="newNameInput"
+            class="text-input"
+            type="text"
+            autocomplete="off"
+            placeholder="Enter new project name"
+          />
+        </div>
+        <p id="newNameValidation" class="hint validation-message hidden"></p>
+        <div id="previewWrap" class="preview-wrap hidden">
+          <label class="checkbox-row" for="coreRedirectsInput">
+            <input id="coreRedirectsInput" type="checkbox" checked />
+            <span>Add CoreRedirects recommendation</span>
+          </label>
+          <button id="previewBtn" class="button">Preview</button>
+        </div>
+      </section>
+
+      <section id="matchedPanel" class="panel info">
+        <div class="meta">
+          <p><strong>Project root:</strong> <span id="projectRoot">-</span></p>
+          <p><strong>Scanned files:</strong> <span id="scannedFiles">0</span></p>
+          <p><strong>Matched files:</strong> <span id="totalFiles">0</span></p>
+          <p><strong>Scanned folders:</strong> <span id="visitedDirs">0</span></p>
+          <p><strong>Blacklist entries:</strong> <span id="excludedCount">0</span></p>
+        </div>
+        <div class="section-head">
+          <h2>Matched files</h2>
+          <button id="toggleMatchedBtn" class="button secondary small hidden">
+            Hide matched list
+          </button>
+        </div>
+        <ul id="fileList" class="file-list hidden"></ul>
+      </section>
+
+      <section id="previewPanel" class="panel preview-panel hidden">
+        <div class="meta">
+          <p><strong>Preview old name:</strong> <span id="previewOldName">-</span></p>
+          <p><strong>Preview new name:</strong> <span id="previewNewName">-</span></p>
+          <p><strong>Files with changes:</strong> <span id="previewFilesWithChanges">0</span></p>
+          <p><strong>Total replacements:</strong> <span id="previewTotalReplacements">0</span></p>
+          <p><strong>Path renames:</strong> <span id="previewPathRenames">0</span></p>
+          <p><strong>Content edits:</strong> <span id="previewContentEdits">0</span></p>
+          <p><strong>Skipped by blacklist:</strong> <span id="previewSkippedByBlacklist">0</span></p>
+          <p><strong>Skipped redirect lines:</strong> <span id="previewSkippedRedirectLines">0</span></p>
+        </div>
+
+        <h2>Path renames</h2>
+        <ul id="previewPathList" class="file-list"></ul>
+
+        <h2>Content edits</h2>
+        <ul id="previewContentList" class="file-list"></ul>
+
+        <section id="coreRedirectsPanel" class="core-redirects hidden">
+          <h2>CoreRedirects Preview</h2>
+          <p class="hint">
+            Add these lines to <strong><span id="coreRedirectsTargetFile">Config/DefaultEngine.ini</span></strong>
+            under <strong><span id="coreRedirectsSection">[CoreRedirects]</span></strong>.
+          </p>
+          <ul id="coreRedirectsList" class="file-list"></ul>
+        </section>
+
+      </section>
+    </main>
+
+    <div class="floating-apply">
+      <button id="applyBtn" class="button" disabled>Apply</button>
+    </div>
+
+    <div id="applyModalBackdrop" class="modal-backdrop hidden">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="applyModalTitle">
+        <h3 id="applyModalTitle">Backup Recommended</h3>
+        <p class="modal-text">
+          It is strongly recommended to create a full backup of your Unreal project before applying rename changes.
+        </p>
+        <div class="modal-actions">
+          <button id="applyCancelBtn" class="button secondary">Cancel</button>
+          <button id="applyConfirmBtn" class="button" disabled>Confirm (10s)</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultModalBackdrop" class="modal-backdrop hidden">
+      <div class="modal-card result-card" role="dialog" aria-modal="true" aria-labelledby="resultModalTitle">
+        <div class="section-head">
+          <h3 id="resultModalTitle">Apply Results</h3>
+          <button id="resultCloseBtn" class="button secondary small">Close</button>
+        </div>
+
+        <div class="meta result-meta">
+          <p><strong>Path renamed:</strong> <span id="resultPathRenamed">0</span></p>
+          <p><strong>Content updated:</strong> <span id="resultContentUpdated">0</span></p>
+          <p><strong>CoreRedirects added:</strong> <span id="resultRedirectsAdded">0</span></p>
+          <p><strong>Errors:</strong> <span id="resultErrors">0</span></p>
+        </div>
+
+        <h4 class="result-subtitle">Operation Log</h4>
+        <ul id="resultLogList" class="file-list log-list"></ul>
+      </div>
+    </div>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>
